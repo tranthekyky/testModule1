@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        function checkSoNguyenTo(num) {
+            if (num <= 1) return false;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
+
+        let n = parseInt(prompt("Nhập số phần tử của mảng (n <= 50):"));
+        console.log(n);
+        if (n > 50) {
+            console.log("Số phần tử không được vượt quá 50");
+        } else {
+            let a = [];
+            for (let i = 0; i < n; i++) {
+                a[i] = parseInt(prompt("Nhập phần tử thứ " + (i + 1) + ":"));
+            }
+
+            console.log("Mảng vừa nhập: ", a);
+            let b = a.filter(checkSoNguyenTo);
+            console.log("Mảng các số nguyên tố: ", b);
+        }
+
+
+
+
+    </script>
+
+</body>
+
+</html>

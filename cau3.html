@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Sổ Tiết Kiệm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Quản Lý Sổ Tiết Kiệm</h1>
+    <form id="sotietkiem-form">
+        <label for="maSo">Mã Sổ:</label>
+        <input type="text" id="maSo" maxlength="5" required><br>
+        <label for="loaiTietKiem">Loại Tiết Kiệm:</label>
+        <input type="text" id="loaiTietKiem" maxlength="10" required><br>
+        <label for="hoTenKhachHang">Họ Tên Khách Hàng:</label>
+        <input type="text" id="hoTenKhachHang" maxlength="30" required><br>
+        <label for="cmnd">Chứng Minh Nhân Dân:</label>
+        <input type="number" id="cmnd" required><br>
+        <label for="ngayMoSo">Ngày Mở Sổ (dd/mm/yyyy):</label>
+        <input type="text" id="ngayMoSo" required><br>
+        <label for="soTienGui">Số Tiền Gửi:</label>
+        <input type="number" id="soTienGui" required><br>
+        <button type="submit">Thêm Sổ Tiết Kiệm</button>
+    </form>
+    <p id="message" class="error"></p>
+    <table id="sotietkiem-table">
+        <thead>
+            <tr>
+                <th>Mã Sổ</th>
+                <th>Loại Tiết Kiệm</th>
+                <th>Họ Tên Khách Hàng</th>
+                <th>Chứng Minh Nhân Dân</th>
+                <th>Ngày Mở Sổ</th>
+                <th>Số Tiền Gửi</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script src="script.js">
+        class SoTietKiem {
+            constructor(maSo, loaiTietKiem, hoTenKhachHang, cmnd, ngayMoSo, soTienGui) {
+
+                this.maSo = maSo;
+                this.loaiTietKiem = loaiTietKiem;
+                this.hoTenKhachHang = hoTenKhachHang;
+                this.cmnd = cmnd;
+                this.ngayMoSo = ngayMoSo;
+                this.soTienGui = soTienGui;
+            }
+        }
+
+        const sotietkiemForm = document.getElementById('sotietkiem-form');
+        const sotietkiemTableBody = document.querySelector('#sotietkiem-table tbody');
+        const message = document.getElementById('message');
+        let sotietkiemList = [];
+
+        sotietkiemForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            message.textContent = '';
+
+            const maSo = document.getElementById('maSo').value.trim();
+            const loaiTietKiem = document.getElementById('loaiTietKiem').value.trim();
+            const hoTenKhachHang = document.getElementById('hoTenKhachHang').value.trim();
+            const cmnd = document.getElementById('cmnd').value.trim();
+            const ngayMoSo = document.getElementById('ngayMoSo').value.trim();
+            const soTienGui = document.getElementById('soTienGui').value.trim();
+
+            if (sotietkiemList.find(s => s.maSo === maSo)) {
+                message.textContent = 'Mã sổ tiết kiệm đã tồn tại. Vui lòng nhập mã khác.';
+                return;
+            }
+
+            const sotietkiem = new SoTietKiem(maSo, loaiTietKiem, hoTenKhachHang, cmnd, ngayMoSo, soTienGui);
+            sotietkiemList.push(sotietkiem);
+            renderTable();
+            sotietkiemForm.reset();
+            message.textContent = 'Đã thêm sổ tiết kiệm!';
+
+        });
+
+        function renderTable() {
+            tbody = "";
+            for (let i = 0; i < sotietkiemList.length; i++) {
+                tbody += `
+            <td>${s.maSo}</td>
+            <td>${s.loaiTietKiem}</td>
+            <td>${s.hoTenKhachHang}</td>
+            <td>${s.cmnd}</td>
+            <td>${s.ngayMoSo}</td>
+            <td>${s.soTienGui}</td>
+            <td><button onclick="deleteSotietkiem('${s.maSo}')">Xóa</button></td>
+        `;
+            }
+
+            document.querySelector("#sotietkiem-table tbody").innerHTML = tbody
+
+        }
+        renderTable()
+
+        function deleteSotietkiem(maSo) {
+            if (confirm(`Bạn có chắc chắn muốn xóa sổ tiết kiệm ${maSo}?`)) {
+                sotietkiemList = sotietkiemList.filter(s => s.maSo !== maSo);
+                renderTable();
+                message.textContent = `Đã xóa sổ tiết kiệm: ${maSo}`;
+            }
+        }
+
+    </script>
+</body>
+
+</html>
